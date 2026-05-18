@@ -1,0 +1,10 @@
+pandas
+ucimlrepo
+duckdb
+pyarrow
+scikit-learn
+joblib
+fastapi
+uvicorn
+invoke
+streamlit

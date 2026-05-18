@@ -1,93 +1,139 @@
-# Heart Failure Clinical Records
+# Heart Failure Clinical Records Project
 
+This repository implements teaching solutions for the UCI Heart Failure Clinical Records dataset.
 
+Dataset source: [UCI Machine Learning Repository, dataset 519](https://archive.ics.uci.edu/dataset/519/heart+failure+clinical+records)
 
-## Getting started
+The project covers data ingestion, validation, versioning, feature engineering, mortality classification, survival analysis, interpretability, regression, clustering, imbalance handling, orchestration, API serving, and documentation.
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+## Setup
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
-
-## Add your files
-
-* [Create](https://docs.gitlab.com/user/project/repository/web_editor/#create-a-file) or [upload](https://docs.gitlab.com/user/project/repository/web_editor/#upload-a-file) files
-* [Add files using the command line](https://docs.gitlab.com/topics/git/add_files/#add-files-to-a-git-repository) or push an existing Git repository with the following command:
-
-```
-cd existing_repo
-git remote add origin https://gitlab.com/skills-marathon/heart-failure-clinical-records.git
-git branch -M main
-git push -uf origin main
+```bash
+python -m venv .venv
+.venv\Scripts\activate
+pip install -r requirements.txt
 ```
 
-## Integrate with your tools
+## Invoke Task Runner
 
-* [Set up project integrations](https://gitlab.com/skills-marathon/heart-failure-clinical-records/-/settings/integrations)
+This project uses [Invoke](https://www.pyinvoke.org/) as a Pythonic Make alternative. Tasks live in `tasks.py`, so the workflow can be orchestrated in Python instead of shell-specific syntax.
 
-## Collaborate with your team
+List available tasks:
 
-* [Invite team members and collaborators](https://docs.gitlab.com/user/project/members/)
-* [Create a new merge request](https://docs.gitlab.com/user/project/merge_requests/creating_merge_requests/)
-* [Automatically close issues from merge requests](https://docs.gitlab.com/user/project/issues/managing_issues/#closing-issues-automatically)
-* [Enable merge request approvals](https://docs.gitlab.com/user/project/merge_requests/approvals/)
-* [Set auto-merge](https://docs.gitlab.com/user/project/merge_requests/auto_merge/)
+```bash
+invoke --list
+```
 
-## Test and Deploy
+## Run Everything
 
-Use the built-in continuous integration in GitLab.
+```bash
+invoke all
+```
 
-* [Get started with GitLab CI/CD](https://docs.gitlab.com/ci/quick_start/)
-* [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/user/application_security/sast/)
-* [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/topics/autodevops/requirements/)
-* [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/user/clusters/agent/)
-* [Set up protected environments](https://docs.gitlab.com/ci/environments/protected_environments/)
+This runs ingestion, validation, feature generation, model training, survival analysis, lineage/version metadata, docs generation, and a weekly model summary.
 
-***
+## Problem Solutions
 
-# Editing this README
+| # | Problem | Implementation |
+|---:|---|---|
+| 1 | Binary classification: predict `death_event` | `train_models.py` trains logistic regression, random forest, and gradient boosting models. |
+| 2 | Survival analysis | `survival_analysis.py` creates Kaplan-Meier curves and survival probabilities at 100 and 200 days. |
+| 3 | Feature importance and clinical interpretability | `train_models.py` writes permutation importance to `reports/feature_importance.csv`. |
+| 4 | Regression: predict follow-up time | `train_models.py` trains a random forest regressor and writes `reports/regression_metrics.json`. |
+| 5 | Clustering: identify patient subgroups | `train_models.py` runs K-means and writes `reports/cluster_summary.csv`. |
+| 6 | Imbalanced learning | Classification models use class weighting and threshold tuning, reported in `reports/model_metrics.json`. |
+| 7 | Data ingestion pipeline | `ingest.py` fetches UCI ID 519, writes raw CSV, metadata, Parquet, and DuckDB tables. |
+| 8 | Data quality and validation | `validate.py` checks missing values, binary fields, and plausible clinical ranges. |
+| 9 | Data versioning and lineage | `lineage.py` writes `reports/lineage.json` and a DVC-style `dvc.lock`. |
+| 10 | Feature engineering pipeline | `ingest.py` creates age groups, creatinine/sodium ratio, and readable labels. |
+| 11 | Reproducible workflow orchestration | `run_all.py` acts as a local DAG and writes `reports/weekly_model_summary.md`. |
+| 12 | App/API wrapper for model serving | `streamlit_app.py` provides an interactive dashboard; `serve_api.py` exposes `/health` and `/predict` with FastAPI. |
+| 13 | Data lineage and documentation | `generate_docs.py` writes schema and project docs under `docs/`. |
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
+## Individual Commands
 
-## Suggestions for a good README
+Ingest and transform:
 
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+```bash
+invoke ingest
+```
 
-## Name
-Choose a self-explaining name for your project.
+Validate raw data:
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+```bash
+invoke validate
+```
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+Train ML models, generate feature importance, run regression, and cluster patients:
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+```bash
+invoke train
+```
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+Run survival analysis:
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+```bash
+invoke survival
+```
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+Generate lineage and DVC-style lock metadata:
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+```bash
+invoke lineage
+```
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+Generate docs:
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+```bash
+invoke docs
+```
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+Start the Streamlit dashboard:
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+```bash
+invoke streamlit
+```
 
-## License
-For open source projects, say how it is licensed.
+Start the prediction API:
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+```bash
+invoke api
+```
+
+The Streamlit app is the easiest way to use the model interactively. It opens a local dashboard with patient input controls, risk probability, feature importance, model metrics, and cluster summaries.
+
+Example prediction request:
+
+```bash
+curl -X POST http://127.0.0.1:8000/predict ^
+  -H "Content-Type: application/json" ^
+  --data @examples/predict_payload.json
+```
+
+## Generated Outputs
+
+Generated files are ignored by git except `dvc.lock`.
+
+- `data/raw/heart_failure.csv`
+- `data/raw/metadata.json`
+- `data/processed/heart_failure_features.parquet`
+- `data/heart_failure.duckdb`
+- `reports/data_quality_report.json`
+- `reports/model_metrics.json`
+- `reports/feature_importance.csv`
+- `reports/regression_metrics.json`
+- `reports/cluster_summary.csv`
+- `reports/survival_analysis.json`
+- `reports/kaplan_meier_curve.csv`
+- `reports/kaplan_meier_by_risk_group.csv`
+- `reports/lineage.json`
+- `reports/weekly_model_summary.md`
+- `docs/dataset_schema.md`
+- `docs/project_summary.md`
+- `models/death_event_model.joblib`
+
+## Teaching Notes
+
+This is a compact local implementation meant for curriculum use. The dataset is small, so the focus is on workflow design and reproducibility rather than production-scale infrastructure.
+
+For clinical use, survival modeling and classification would need stronger validation, calibration, uncertainty analysis, and external data.

@@ -1,0 +1,9 @@
+schema: '2.0'
+stages:
+  ingest:
+    cmd: python ingest.py
+    outs:
+      - path: data/raw/heart_failure.csv
+        hash: md5
+        md5: 6ceb1659e557ff6ddbc8cd2d0eacece5
+        size: 13793
