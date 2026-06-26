@@ -1,5 +1,12 @@
 # Heart Failure Clinical Records Project
 
+[![License: MIT](https://img.shields.io/github/license/akhilvydyula/heart-failure-clinical-records)](LICENSE)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-3776AB?logo=python&logoColor=white)](https://www.python.org/downloads/)
+[![scikit-learn](https://img.shields.io/badge/scikit--learn-F7931E?logo=scikit-learn&logoColor=white)](https://scikit-learn.org/)
+[![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?logo=streamlit&logoColor=white)](https://streamlit.io/)
+[![GitHub stars](https://img.shields.io/github/stars/akhilvydyula/heart-failure-clinical-records?style=social)](https://github.com/akhilvydyula/heart-failure-clinical-records/stargazers)
+[![Open Source](https://img.shields.io/badge/open%20source-welcome-brightgreen)](#open-source)
+
 This repository implements teaching solutions for the UCI Heart Failure Clinical Records dataset.
 
 Dataset source: [UCI Machine Learning Repository, dataset 519](https://archive.ics.uci.edu/dataset/519/heart+failure+clinical+records)
@@ -137,3 +144,20 @@ Generated files are ignored by git except `dvc.lock`.
 This is a compact local implementation meant for curriculum use. The dataset is small, so the focus is on workflow design and reproducibility rather than production-scale infrastructure.
 
 For clinical use, survival modeling and classification would need stronger validation, calibration, uncertainty analysis, and external data.
+
+## Open source
+
+This repository is **open source** under the [MIT License](LICENSE). Stars, issues, and pull requests are welcome — they help others discover the project and improve it for the community.
+
+### How you can help
+
+- **Star** the repo if you find it useful — it helps visibility on GitHub Explore and search.
+- **Open an issue** for bugs, ideas, or questions.
+- **Submit a pull request** with a focused change and a clear description.
+- **Share** the project with students and educators teaching healthcare ML workflows.
+
+Maintained by [Akhil Vydyula](https://github.com/akhilvydyula) as part of the Skills Marathon ML portfolio.
+
+## License
+
+Application code is released under the [MIT License](LICENSE). The [UCI Heart Failure dataset](https://archive.ics.uci.edu/dataset/519/heart+failure+clinical+records) has its own terms — review before redistribution.
